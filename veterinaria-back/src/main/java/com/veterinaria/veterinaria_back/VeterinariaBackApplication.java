@@ -5,9 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class VeterinariaBackApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(VeterinariaBackApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(VeterinariaBackApplication.class, args);
+    }
 }

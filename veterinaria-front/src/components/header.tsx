@@ -5,7 +5,7 @@ import './header.css';
 import '../App.css';
 
 const Header = () => {
-  const { isAuthenticated, logout,user} = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -21,9 +21,13 @@ const Header = () => {
     }
   };
 
-  const getUserInitials = (username?: string) => {
-    if (!username) return 'U';
-    return username.split(' ').map(name => name[0]).join('').toUpperCase().slice(0, 2);
+  const getUserInitials = (username: string = '') => {
+    return username
+      .split(' ')
+      .map(name => name[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2) || 'U';
   };
 
   const getCurrentTime = () => {
@@ -47,12 +51,12 @@ const Header = () => {
         {isAuthenticated && (
           <div className="header-right">
             <div className="user-info">
-              <span>Bienvenido, {user?.username || 'Usuario'}</span>
-              <span>•</span>
-              <span>{getCurrentTime()}</span>
+              <span>Bienvenido, {user?.username || 'Admin'}</span>
+              <span className="separator">•</span>
+              <span className="time">{getCurrentTime()}</span>
             </div>
             
-            <div className="user-avatar">
+            <div className="user-avatar" title={user?.username}>
               {getUserInitials(user?.username)}
             </div>
             

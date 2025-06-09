@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { getPacientes } from '../api/pacienteApi';
 
+interface Paciente {
+    id: number;
+    nombre: string;
+    especie: string;
+    raza: string;
+    fechaNacimiento: string;
+    clienteId: number;
+}
+
 const PacienteTable = () => {
-    const [pacientes, setPacientes] = useState([]);
+    const [pacientes, setPacientes] = useState<Paciente[]>([]);
 
     useEffect(() => {
         const fetchPacientes = async () => {
@@ -13,12 +22,14 @@ const PacienteTable = () => {
     }, []);
 
     return (
-        <table>
+        <table style={{ width: "100%", borderCollapse: "collapse", marginTop: 16 }}>
             <thead>
-                <tr>
+                <tr style={{ background: "#1976d2", color: "#fff" }}>
                     <th>Nombre</th>
                     <th>Especie</th>
                     <th>Raza</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>ID Cliente</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,6 +38,11 @@ const PacienteTable = () => {
                         <td>{paciente.nombre}</td>
                         <td>{paciente.especie}</td>
                         <td>{paciente.raza}</td>
+                        <td>{paciente.fechaNacimiento ? 
+                            paciente.fechaNacimiento.substring(0, 10) : 
+                            ""}
+                        </td>
+                        <td>{paciente.clienteId}</td>
                     </tr>
                 ))}
             </tbody>

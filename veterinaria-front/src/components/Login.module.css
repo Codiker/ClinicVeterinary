@@ -1,0 +1,163 @@
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--primary-light) 0%, #ffffff 100%);
+  padding: 2rem;
+}
+
+.loginCard {
+  background: white;
+  padding: 3rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.loginCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+}
+
+.logoContainer {
+  margin-bottom: 2rem;
+}
+
+.logo {
+  height: 60px;
+  width: auto;
+  margin-bottom: 1rem;
+}
+
+.title {
+  color: var(--primary-dark);
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 2.5rem;
+  font-size: 1rem;
+}
+
+.inputGroup {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #444;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.input {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition);
+  background-color: #f9f9f9;
+}
+
+.input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+  background-color: white;
+}
+
+.button {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.button:disabled {
+  background: #cccccc;
+  transform: none;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.error {
+  color: var(--danger-color);
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  padding: 0.75rem;
+  background-color: rgba(229, 57, 53, 0.1);
+  border-radius: var(--border-radius);
+}
+
+.footer {
+  margin-top: 2rem;
+  color: #777;
+  font-size: 0.85rem;
+}
+
+/* Efectos de mascota */
+.pawIcon {
+  position: absolute;
+  opacity: 0.05;
+  z-index: 0;
+}
+
+.paw1 {
+  top: 20%;
+  left: 10%;
+  transform: rotate(30deg);
+  font-size: 3rem;
+}
+
+.paw2 {
+  bottom: 15%;
+  right: 10%;
+  transform: rotate(-20deg);
+  font-size: 4rem;
+}
+
+/* Animación de carga */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loadingSpinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+}

@@ -1,19 +1,34 @@
-import React from 'react';
-import PacientesCRUD from './components/PacientesCRUD';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import Login from './components/Login';
-import { getToken } from './utils/authUtils';
-import './App.css';
+import PacientesCRUD from './components/PacientesCrud';
+import ProtectedRoute from './components/ProtectedRoute';
+import Header from './components/header';
+import './App.css'; 
 
 function App() {
-  const token = getToken();
-
   return (
-    <div style={{ minHeight: '100vh', background: '#f4f6f8', padding: '40px' }}>
-      <div style={{ maxWidth: 800, margin: '0 auto', background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px #0001', padding: 32 }}>
-        <h1 style={{ textAlign: 'center', marginBottom: 32 }}>Gestión de Pacientes</h1>
-        {!token ? <Login /> : <PacientesCRUD />}
-      </div>
-    </div>
+    <AuthProvider>
+      <Router>
+        <div className="app-container">
+          <Header />
+          <main className="main-content">
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/pacientes"
+                element={
+                  <ProtectedRoute>
+                    <PacientesCRUD />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/" element={<Navigate to="/pacientes" replace />} />
+            </Routes>
+          </main>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

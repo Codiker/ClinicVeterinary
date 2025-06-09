@@ -7,10 +7,12 @@ interface PacienteFormProps {
 }
 
 const initialState = {
+  id: 0, 
   nombre: '',
   especie: '',
   raza: '',
   fechaNacimiento: '',
+   fechaRegistro: new Date().toISOString().split('T')[0],
   clienteId: ''
 };
 
@@ -22,8 +24,12 @@ const PacienteForm: React.FC<PacienteFormProps> = ({ onSubmit, pacienteEdit, onC
 useEffect(() => {
   if (pacienteEdit) {
     setPaciente({
-      ...pacienteEdit,
+      id: pacienteEdit.id, // Asegurarse de incluir el ID
+      nombre: pacienteEdit.nombre,
+      especie: pacienteEdit.especie,
+      raza: pacienteEdit.raza,
       fechaNacimiento: pacienteEdit.fechaNacimiento.split('T')[0],
+      fechaRegistro: pacienteEdit.fechaRegistro,
       clienteId: pacienteEdit.clienteId.toString()
     });
     setErrors({}); // Limpiar errores al cargar datos de edición
@@ -87,11 +93,17 @@ useEffect(() => {
     setIsSubmitting(true);
     
     try {
-      await onSubmit({
-        ...paciente,
-        clienteId: Number(paciente.clienteId),
-        fechaNacimiento: paciente.fechaNacimiento
-      });
+      const pacienteToSubmit = {
+        ...(pacienteEdit?.id ? { id: Number(pacienteEdit.id) } : {}),
+        nombre: paciente.nombre,
+        especie: paciente.especie,
+        raza: paciente.raza,
+        fechaNacimiento: paciente.fechaNacimiento,
+        fechaRegistro: pacienteEdit?.fechaRegistro || new Date().toISOString().split('T')[0],
+        clienteId: Number(paciente.clienteId)
+      };
+
+      await onSubmit(pacienteToSubmit);
       
       if (!pacienteEdit) {
         setPaciente(initialState);
@@ -99,6 +111,10 @@ useEffect(() => {
       }
     } catch (error) {
       console.error('Error al enviar el formulario:', error);
+      setErrors(prev => ({
+        ...prev,
+        submit: 'Error al guardar el paciente. Por favor, intente nuevamente.'
+      }));
     } finally {
       setIsSubmitting(false);
     }

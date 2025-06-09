@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class PacienteService {
     private final PacienteRepository pacienteRepository;
@@ -19,12 +20,10 @@ public class PacienteService {
     }
 
     public Paciente crearPaciente(Paciente paciente) {
-        // 1. Validar que el cliente exista
         if (!clienteRepository.existsById(paciente.getClienteId())) {
             throw new ClienteNotFoundException(paciente.getClienteId());
         }
 
-        // 2. Guardar el paciente
         return pacienteRepository.save(paciente);
     }
 
@@ -38,5 +37,18 @@ public class PacienteService {
 
     public void eliminarPaciente(int id) {
         pacienteRepository.deleteById(id);
+    }
+
+    public Paciente actualizarPaciente(int id, Paciente paciente) {
+        if (!pacienteRepository.findById(id).isPresent()) {
+            throw new RuntimeException("Paciente no encontrado con ID: " + id);
+        }
+
+        if (!clienteRepository.existsById(paciente.getClienteId())) {
+            throw new ClienteNotFoundException(paciente.getClienteId());
+        }
+
+        paciente.setId(id);
+        return pacienteRepository.save(paciente);
     }
 }

@@ -35,6 +35,12 @@ public class PacienteController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<Paciente> actualizarPaciente(@PathVariable int id, @RequestBody Paciente paciente) {
+        Paciente actualizado = pacienteService.actualizarPaciente(id, paciente);
+        return ResponseEntity.ok(actualizado);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarPaciente(@PathVariable int id) {

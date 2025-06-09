@@ -1,110 +1,5 @@
-// import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom'; // Cambiado de useHistory a useNavigate
-// import { useAuth } from '../context/AuthContext';
-// import axios from 'axios'; // Importamos axios directamente
-// import styles from './Login.module.css';
-
-// interface Credentials {
-//   username: string;
-//   password: string;
-// }
-
-// const Login = () => {
-//     const [credentials, setCredentials] = useState<Credentials>({ username: '', password: '' });
-//     const [error, setError] = useState('');
-//     const [isLoading, setIsLoading] = useState(false);
-//     const { login } = useAuth();
-//     const navigate = useNavigate(); // Actualizado a useNavigate
-
-//     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//         setCredentials({ ...credentials, [e.target.name]: e.target.value });
-//         setError('');
-//     };
-
-//     const validateForm = (): boolean => {
-//         if (!credentials.username.trim()) {
-//             setError('El nombre de usuario es requerido');
-//             return false;
-//         }
-//         if (!credentials.password.trim()) {
-//             setError('La contraseña es requerida');
-//             return false;
-//         }
-//         return true;
-//     };
-
-//     const handleSubmit = async (e: React.FormEvent) => {
-//         e.preventDefault();
-        
-//         if (!validateForm()) return;
-
-//         try {
-//             setIsLoading(true);
-//             setError('');
-            
-//             const response = await login(credentials);
-            
-//             if (response.success) {
-//                 navigate('/pacientes'); // Usando navigate en lugar de window.location
-//             } else {
-//                 setError('Credenciales incorrectas');
-//             }
-//         } catch (err) {
-//             setError('Error al conectar con el servidor. Intente más tarde.');
-//         } finally {
-//             setIsLoading(false);
-//         }
-//     };
-
-//   return (
-//     <div className={styles.loginContainer}>
-//       <form className={styles.loginForm} onSubmit={handleSubmit}>
-//         <h2 className={styles.title}>Iniciar sesión</h2>
-        
-//         <div className={styles.inputGroup}>
-//           <input
-//             className={styles.input}
-//             name="username"
-//             placeholder="Usuario"
-//             value={credentials.username}
-//             onChange={handleChange}
-//             autoComplete="username"
-//             disabled={isLoading}
-//             required
-//           />
-//         </div>
-        
-//         <div className={styles.inputGroup}>
-//           <input
-//             className={styles.input}
-//             name="password"
-//             type="password"
-//             placeholder="Contraseña"
-//             value={credentials.password}
-//             onChange={handleChange}
-//             autoComplete="current-password"
-//             disabled={isLoading}
-//             required
-//           />
-//         </div>
-
-//         <button 
-//           className={styles.button} 
-//           type="submit"
-//           disabled={isLoading}
-//         >
-//           {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
-//         </button>
-
-//         {error && <p className={styles.error}>{error}</p>}
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default Login;
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import styles from './Login.module.css';
 
@@ -114,11 +9,20 @@ interface Credentials {
 }
 
 const Login = () => {
+  
   const [credentials, setCredentials] = useState<Credentials>({ username: '', password: '' });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('session') === 'expired') {
+      setError('Su sesión ha expirado. Por favor, inicie sesión nuevamente.');
+    }
+  }, [location]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });

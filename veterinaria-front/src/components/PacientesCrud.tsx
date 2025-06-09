@@ -76,7 +76,21 @@ const PacientesCRUD = () => {
   const handleUpdate = async (paciente: any) => {
     try {
       setError(null);
-      await updatePaciente(paciente.id, paciente);
+      if (!paciente.id) {
+        throw new Error('ID de paciente no válido');
+      }
+
+      const pacienteActualizado = {
+        id: Number(paciente.id),
+        nombre: paciente.nombre,
+        especie: paciente.especie,
+        raza: paciente.raza,
+        fechaNacimiento: paciente.fechaNacimiento,
+        fechaRegistro: paciente.fechaRegistro,
+        clienteId: Number(paciente.clienteId)
+      };
+
+      await updatePaciente(pacienteActualizado.id, pacienteActualizado);
       await fetchPacientes();
       setEditPaciente(null);
       setShowForm(false);
@@ -85,6 +99,8 @@ const PacientesCRUD = () => {
       if (err instanceof Error) {
         if (err.message.includes("403")) {
           setError("Sesión expirada. Por favor, inicie sesión nuevamente.");
+        } else if (err.message.includes("404")) {
+          setError("El paciente no fue encontrado.");
         } else {
           setError(`Error al actualizar el paciente: ${err.message}`);
         }
@@ -110,16 +126,25 @@ const PacientesCRUD = () => {
     }
   };
 
-  const handleEdit = (paciente: Paciente) => {
-    // Formatea la fecha antes de enviarla al formulario
-    const pacienteFormateado = {
-      ...paciente,
-      fechaNacimiento: paciente.fechaNacimiento.split("T")[0], // Asegura formato YYYY-MM-DD
-    };
+  const handleEdit = async (paciente: Paciente) => {
+    try {
+      // Formatea la fecha antes de enviarla al formulario
+      const pacienteFormateado = {
+        id: paciente.id,
+        nombre: paciente.nombre,
+        especie: paciente.especie,
+        raza: paciente.raza,
+        fechaNacimiento: paciente.fechaNacimiento.split("T")[0],
+        clienteId: paciente.clienteId,
+      };
 
-    setEditPaciente(pacienteFormateado);
-    setShowForm(true);
-    setError(null); // Limpia cualquier error previo
+      setEditPaciente(pacienteFormateado);
+      setShowForm(true);
+      setError(null);
+    } catch (error) {
+      console.error("Error al preparar edición:", error);
+      setError("Error al cargar los datos para edición");
+    }
   };
 
   const handleCancel = () => {
@@ -525,9 +550,10 @@ const PacientesCRUD = () => {
                             className="btn btn-primary btn-sm"
                             onClick={() => handleEdit(p)}
                             title="Editar paciente"
+                            disabled={loading}
                           >
-                            <span>✏️</span>
-                            Editar
+                            <span className="button-icon">✏️</span>
+                            <span className="button-text">Editar</span>
                           </button>
                           <button
                             className="btn btn-danger btn-sm"

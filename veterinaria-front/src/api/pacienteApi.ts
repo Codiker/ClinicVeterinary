@@ -72,15 +72,36 @@ export const createPaciente = async (paciente: any) => {
 
 export const updatePaciente = async (id: number, paciente: any) => {
   const token = getToken();
-  const res = await fetch(`${API_URL}/${id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(paciente)
-  });
-  return res.json();
+  
+  if (!token) {
+    throw new Error('No hay token de autenticación');
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        ...paciente,
+        id: Number(id),
+        clienteId: Number(paciente.clienteId),
+        fechaRegistro: paciente.fechaRegistro || new Date().toISOString().split('T')[0]
+      })
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      throw new Error(errorData?.message || `Error del servidor: ${res.status}`);
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error('Error en updatePaciente:', error);
+    throw error;
+  }
 };
 
 export const deletePaciente = async (id: number) => {

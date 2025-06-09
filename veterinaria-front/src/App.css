@@ -583,3 +583,33 @@ body {
   opacity: 0.7;
   cursor: not-allowed;
 }
+
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+.pagination-info {
+  color: var(--gray-600);
+  font-size: 0.875rem;
+}
+
+.btn-success {
+  background-color: var(--success-600);
+  color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: var(--success-700);
+}
+
+.btn-success:disabled {
+  background-color: var(--success-400);
+  cursor: not-allowed;
+}

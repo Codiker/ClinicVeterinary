@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
+import Pagination from './Pagination';
+import ExportButton from './ExportButton';
 import "../App.css";
 import {
   getPacientes,
@@ -29,6 +31,10 @@ const PacientesCRUD = () => {
   >("nombre");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [showForm, setShowForm] = useState(false);
+
+  // Agregar estos estados
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const fetchPacientes = async () => {
     try {
@@ -190,6 +196,13 @@ const PacientesCRUD = () => {
       }
     });
   }, [pacientes, searchTerm, filterEspecie, sortBy, sortOrder]);
+
+  // Agregar esta función para calcular los pacientes de la página actual
+  const paginatedPacientes = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * itemsPerPage;
+    const lastPageIndex = firstPageIndex + itemsPerPage;
+    return filteredAndSortedPacientes.slice(firstPageIndex, lastPageIndex);
+  }, [filteredAndSortedPacientes, currentPage, itemsPerPage]);
 
   const getUniqueEspecies = () => {
     return [...new Set(pacientes.map((p) => p.especie))].sort();
@@ -400,22 +413,23 @@ const PacientesCRUD = () => {
 
       {/* Lista de pacientes */}
       <div className="card">
-        <h2 className="section-title">
-          <span>📋</span>
-          Lista de Pacientes
-          {filteredAndSortedPacientes.length !== pacientes.length && (
-            <span
-              style={{
-                fontSize: "1rem",
-                fontWeight: "normal",
-                color: "var(--gray-600)",
-                marginLeft: "1rem",
-              }}
-            >
-              ({filteredAndSortedPacientes.length} de {pacientes.length})
-            </span>
-          )}
-        </h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <h2 className="section-title">
+            <span>📋</span>
+            Lista de Pacientes
+            {filteredAndSortedPacientes.length !== pacientes.length && (
+              <span style={{ fontSize: '1rem', fontWeight: 'normal', color: 'var(--gray-600)', marginLeft: '1rem' }}>
+                ({filteredAndSortedPacientes.length} de {pacientes.length})
+              </span>
+            )}
+          </h2>
+          
+          <ExportButton 
+            data={filteredAndSortedPacientes}
+            fileName="Pacientes"
+            disabled={filteredAndSortedPacientes.length === 0}
+          />
+        </div>
 
         {error && (
           <div className="alert alert-danger">
@@ -428,7 +442,7 @@ const PacientesCRUD = () => {
           <div className="loading-state">
             <span>Cargando pacientes...</span>
           </div>
-        ) : filteredAndSortedPacientes.length === 0 ? (
+        ) : paginatedPacientes.length === 0 ? (
           <div className="empty-state">
             <div className="empty-state-icon">
               {searchTerm || filterEspecie ? "🔍" : "🐾"}
@@ -465,7 +479,7 @@ const PacientesCRUD = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredAndSortedPacientes.map((p) => {
+                {paginatedPacientes.map((p) => {
                   const edadMeses = getEdadEnMeses(p.fechaNacimiento);
                   const edadTexto =
                     edadMeses < 12
@@ -572,6 +586,17 @@ const PacientesCRUD = () => {
             </table>
           </div>
         )}
+
+        <Pagination 
+          currentPage={currentPage}
+          totalItems={filteredAndSortedPacientes.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={(items) => {
+            setItemsPerPage(items);
+            setCurrentPage(1);
+          }}
+        />
       </div>
     </div>
   );

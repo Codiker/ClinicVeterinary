@@ -17,7 +17,8 @@ public class ClienteService {
     }
 
     public Cliente crearCliente(Cliente cliente) {
-        //  agregar validaciones (por ejemplo, verificar duplicados, etc)
+        //  agregar validaciones (lunes 9)
+
         return clienteRepository.save(cliente);
     }
 
@@ -30,7 +31,7 @@ public class ClienteService {
     }
 
     public Cliente actualizarCliente(Cliente cliente) {
-        // Validar que el cliente exista para actualización (opcional)
+        //  agregar validaciones para ver si el cliente existe (lunes 9)
         return clienteRepository.save(cliente);
     }
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ClienteModal from './ClienteModal';
 
 interface PacienteFormProps {
   onSubmit: (paciente: any) => void;
@@ -20,6 +21,7 @@ const PacienteForm: React.FC<PacienteFormProps> = ({ onSubmit, pacienteEdit, onC
   const [paciente, setPaciente] = useState(initialState);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showClienteModal, setShowClienteModal] = useState(false);
 
 useEffect(() => {
   if (pacienteEdit) {
@@ -224,20 +226,26 @@ useEffect(() => {
         </div>
 
         <div className="form-group">
-          <label className="form-label">
-            <span style={{ marginRight: '0.5rem' }}>👤</span>
-            ID del Cliente
-          </label>
-          <input
-            className={`form-input ${errors.clienteId ? 'input-error' : ''}`}
-            name="clienteId"
-            type="number"
-            value={paciente.clienteId}
-            onChange={handleChange}
-            placeholder="Ej: 12345"
-            min="1"
-            disabled={isSubmitting}
-          />
+          <label>ID del Cliente</label>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <input
+              name="clienteId"
+              type="number"
+              value={paciente.clienteId}
+              onChange={handleChange}
+              placeholder="Ej: 12345"
+              min="1"
+              disabled={isSubmitting}
+            />
+            <button 
+              type="button" 
+              onClick={() => setShowClienteModal(true)}
+              className="btn btn-secondary"
+              disabled={isSubmitting}
+            >
+              Buscar/Crear Cliente
+            </button>
+          </div>
           {errors.clienteId && <span className="error-message">{errors.clienteId}</span>}
         </div>
 
@@ -272,6 +280,15 @@ useEffect(() => {
           </button>
         </div>
       </form>
+
+      <ClienteModal
+        show={showClienteModal}
+        onClose={() => setShowClienteModal(false)}
+        onSelect={cliente => {
+          setPaciente({ ...paciente, clienteId: String(cliente.id) });
+          setShowClienteModal(false);
+        }}
+      />
     </div>
   );
 };

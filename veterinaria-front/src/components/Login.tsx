@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { FaPaw } from 'react-icons/fa';
 import styles from './Login.module.css';
 
 interface Credentials {
@@ -72,8 +73,8 @@ const Login = () => {
         <span className={`${styles.pawIcon} ${styles.paw2}`}>🐾</span>
         
         <div className={styles.logoContainer}>
-          <img src="/paw-icon.svg" alt="Logo Clínica Veterinaria" className={styles.logo} />
-          <h1 className={styles.title}>Cisco Clinical Veterinaria</h1>
+          <FaPaw size={56} color="#2563eb" className={styles.logo} />
+          <h1 className={styles.title}>AppVeterinaria</h1>
           <p className={styles.subtitle}>Sistema de gestión de pacientes</p>
         </div>
 
@@ -126,7 +127,7 @@ const Login = () => {
         </form>
 
         <div className={styles.footer}>
-          <p>© {new Date().getFullYear()} Cisco Clinical Veterinaria. Todos los derechos reservados.</p>
+          <p>© {new Date().getFullYear()} AppVeterinaria. Todos los derechos reservados.</p>
         </div>
       </div>
     </div>
